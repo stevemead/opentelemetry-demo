@@ -32,7 +32,11 @@ exporters:
         insecure: true
 
 processors:
-  batch:
+  attributes/upsert_demo:
+    actions:
+      - key: demo
+        value: platforms
+        action: upsert
 
 connectors:
   spanmetrics:
@@ -41,13 +45,13 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
+      processors: [attributes/upsert_demo]
       exporters: [otlp, debug, spanmetrics]
     metrics:
       receivers: [httpcheck/frontendproxy, otlp, spanmetrics]
-      processors: [batch]
+      processors: [attributes/upsert_demo]
       exporters: [otlphttp/prometheus, debug]
     logs:
       receivers: [otlp]
-      processors: [batch]
+      processors: [attributes/upsert_demo]
       exporters: [opensearch, debug]
